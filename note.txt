@@ -1,0 +1,27 @@
+docker run --name pg-cont -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=olim123 -d postgres
+docker exec -it pg-cont bin/bash  || == == == => psql -U root
+\du  //show users
+\dt  //show tables
+\l  //show dbs
+\c db_name //change db
+dropdb db_name //delete db
+// for the current TRANSACTION
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+1. init migration files
+-- migrate create -ext sql -dir db/migration -seq init_schema
+paste sql create table queries to migrate up schema
+paste sql drop table queries to migrate down schema
+
+2. config sqlc.yaml 
+write queries in db/query/ 
+command line: sqlc generate
+it will create db, models, sqlc files that contain queries in go langugae.
+
+
+3. write test.M for db connection
+write test for sqlc files
+
+
+? set docker exec env variable
+? test undefined problems & versions collision.
