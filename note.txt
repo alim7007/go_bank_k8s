@@ -10,17 +10,19 @@ SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 
 1. init migration files
 -- migrate create -ext sql -dir db/migration -seq init_schema
-paste sql create table queries to migrate up schema
-paste sql drop table queries to migrate down schema
+paste "sql create table queries" to migrate up schema
+paste "sql drop table queries" to migrate down schema
 
 2. config sqlc.yaml 
 write queries in db/query/ 
 command line: sqlc generate
-it will create db, models, sqlc files that contain queries in go langugae.
+it will create db models and queries in go language in sqlc filder.
 
 
 3. write test.M for db connection
 write test for sqlc files
+
+4. github/workflows/ci.yml
 
 
 ? set docker exec env variable
