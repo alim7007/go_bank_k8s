@@ -8,6 +8,9 @@ dropdb db_name //delete db
 // for the current TRANSACTION
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 
+interface >> defines what methods "functions" a certain struct contain
+
+
 1. init migration files
 -- migrate create -ext sql -dir db/migration -seq init_schema
 paste "sql create table queries" to migrate up schema
@@ -23,6 +26,24 @@ it will create db models and queries in go language in sqlc filder.
 write test for sqlc files
 
 4. github/workflows/ci.yml
+
+5. create api/server.go and api/account.go, also main.go
+
+6. create config.go and env or json of credentials, and update db/sqlc/main_test.go and main.go db-connection
+
+7.  sqlc >> emit_interface: true
+type Store interface {}
+make mock
+write api test with mock :(
+
+8.  transfer api with test, validator, currency util
+-- migrate create -ext sql -dir db/migration -seq add_users
+add user table with index and constraints to account owner
+make migrateup1
+
+9. create token folder, jwt | paseto
+user.login
+
 
 
 ? set docker exec env variable

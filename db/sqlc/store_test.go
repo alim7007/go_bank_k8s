@@ -122,7 +122,7 @@ func TestTransferTxDeadlock(t *testing.T) {
 	account2 := createRandomAccount(t)
 	fmt.Println(">> before:", account1.Balance, account2.Balance)
 
-	n := 3
+	n := 6
 	amount := int64(7373)
 	errs := make(chan error)
 
@@ -159,6 +159,6 @@ func TestTransferTxDeadlock(t *testing.T) {
 	require.NoError(t, err)
 
 	fmt.Println(">> after:", updatedAccount1.Balance, updatedAccount2.Balance)
-	// require.Equal(t, account1.Balance, updatedAccount1.Balance)
-	// require.Equal(t, account2.Balance, updatedAccount2.Balance)
+	require.Equal(t, account1.Balance, updatedAccount1.Balance)
+	require.Equal(t, account2.Balance, updatedAccount2.Balance)
 }
