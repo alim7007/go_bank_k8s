@@ -1,5 +1,7 @@
 docker run --name pg-cont -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=olim123 -d postgres
 docker exec -it pg-cont bin/bash  || == == == => psql -U root
+// delete all docker volumes except specific one
+docker volume ls -q | grep -v myvolume | xargs docker volume rm
 \du  //show users
 \dt  //show tables
 \l  //show dbs
