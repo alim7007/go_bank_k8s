@@ -1,5 +1,19 @@
+//DOCKER
 docker run --name pg-cont -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=olim123 -d postgres
 docker exec -it pg-cont bin/bash  || == == == => psql -U root
+// delete all docker volumes except specific one
+docker volume ls -q | grep -v myvolume | xargs docker volume rm
+docker network create bank_network
+docker network connect bank_network pg-cont
+docker container inspect pg-cont
+docker network inspect bank_network
+docker network ls
+
+//Dockerfile
+docker run --name olimbank --network bank_network -p 8080:8080 -e DB_SOURCE="postgresql://root:olim123@pg-cont:5432/olim_bank?sslmode=disable" olimbank:latest
+
+
+//DATABASE
 \du  //show users
 \dt  //show tables
 \l  //show dbs
@@ -7,6 +21,9 @@ docker exec -it pg-cont bin/bash  || == == == => psql -U root
 dropdb db_name //delete db
 // for the current TRANSACTION
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+
+//GO
 
 interface >> defines what methods "functions" a certain struct contain
 
@@ -43,8 +60,11 @@ make migrateup1
 
 9. create token folder, jwt | paseto
 user.login
+auth.middleware
 
 
 
 ? set docker exec env variable
 ? test undefined problems & versions collision.
+
+// "postgresql://root:olim123@172.17.0.2:5432/olim_bank?sslmode=disable"

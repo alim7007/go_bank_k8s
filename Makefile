@@ -1,5 +1,6 @@
 postgres:
-	docker run --name pg-cont -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=olim123 -d postgres
+	docker run --name pg-cont --network bank_network -p 5432:5432 -e POSTGRES_USER=root -e \
+	POSTGRES_PASSWORD=olim123 -v myvolume:/var/lib/postgresql/data -d postgres
 createdb:
 	docker exec -it pg-cont createdb --username=root --owner=root olim_bank
 dropdb:
