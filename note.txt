@@ -22,7 +22,7 @@ dropdb db_name //delete db
 // for the current TRANSACTION
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 
-
+..
 //GO
 
 interface >> defines what methods "functions" a certain struct contain
