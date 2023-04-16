@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/alim7007/go_backend_bank/api"
-	db "github.com/alim7007/go_backend_bank/db/sqlc"
-	"github.com/alim7007/go_backend_bank/util"
+	"github.com/alim7007/go_bank_k8s/api"
+	db "github.com/alim7007/go_bank_k8s/db/sqlc"
+	"github.com/alim7007/go_bank_k8s/util"
 	_ "github.com/lib/pq"
 )
 

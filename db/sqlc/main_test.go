@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/alim7007/go_backend_bank/util"
+	"github.com/alim7007/go_bank_k8s/util"
 	_ "github.com/lib/pq"
 )
 
