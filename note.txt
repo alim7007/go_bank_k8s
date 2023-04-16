@@ -62,7 +62,10 @@ make migrateup1
 user.login
 auth.middleware
 
-
+10.Dockerfile, docker-compose, docker
+AWS, ECR, EC2, S3, IAM
+ECR -> create repository -> github/workflow/deploy -> Registry=go_bank_k8s
+iam -> users -> create group=deployment -> copy role-> set github.action.secrets=ACCESSS_IAM_ROLE
 
 ? set docker exec env variable
 ? test undefined problems & versions collision.
