@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	db "github.com/alim7007/go_backend_bank/db/sqlc"
+	db "github.com/alim7007/go_bank_k8s/db/sqlc"
 	"github.com/gin-gonic/gin"
 )
 

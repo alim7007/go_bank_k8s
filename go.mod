@@ -1,4 +1,4 @@
-module github.com/alim7007/go_backend_bank
+module github.com/alim7007/go_bank_k8s
 
 go 1.20
 

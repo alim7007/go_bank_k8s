@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/alim7007/go_backend_bank/util"
+	"github.com/alim7007/go_bank_k8s/util"
 	"github.com/go-playground/validator/v10"
 )
 
