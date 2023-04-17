@@ -43,7 +43,7 @@ jobs:
           which migrate
 
       - name: Run migrations
-        run: make migrateup migrateup1
+        run: make migrateup && make migrateup1
 
       - name: Test
         run: make test
