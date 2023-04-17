@@ -11,7 +11,7 @@ dropdb:
 migrateup:
 	migrate -path db/migration -database "postgresql://root:fb6RL5Qr8DwDLBV67yKv@olimbank.cc8qze1bz9q2.eu-west-3.rds.amazonaws.com:5432/olim_bank" -verbose up
 migrateup1:
-	migrate -path db/migration -database "postgresql://root:olim123@localhost:5432/olim_bank?sslmode=disable" -verbose up 1
+	migrate -path db/migration -database "postgresql://root:fb6RL5Qr8DwDLBV67yKv@olimbank.cc8qze1bz9q2.eu-west-3.rds.amazonaws.com:5432/olim_bank" -verbose up 1
 migratedown:
 	migrate -path db/migration -database "postgresql://root:olim123@localhost:5432/olim_bank?sslmode=disable" -verbose down
 migratedown1:
