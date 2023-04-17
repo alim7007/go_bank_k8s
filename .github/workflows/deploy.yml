@@ -26,7 +26,7 @@ jobs:
         run: aws secretsmanager get-secret-value --secret-id olim_bank --query SecretString --output text > app.json
 
       - name: Load secrets from aws and save to .env
-        run: aws secretsmanager get-secret-value --secret-id olim_bank --query SecretString --output text | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]'
+        run: aws secretsmanager get-secret-value --secret-id olim_bank --query SecretString --output text | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
 
       - name: Build, tag, and push docker image to Amazon ECR
         env:
