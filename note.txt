@@ -62,12 +62,29 @@ make migrateup1
 user.login
 auth.middleware
 
-10.Dockerfile, docker-compose, docker
+10. Dockerfile, docker-compose, docker
 AWS, ECR, EC2, S3, IAM
 ECR -> create repository -> github/workflow/deploy -> Registry=go_bank_k8s
 iam -> users -> create group=deployment -> copy role-> set github.action.secrets=ACCESSS_IAM_ROLE
 
-? set docker exec env variable
-? test undefined problems & versions collision.
+11. aws secretsmanager get-secret-value --secret-id olim_bank
+--query SecretString
+--output text
+aws configure
 
-// "postgresql://root:olim123@172.17.0.2:5432/olim_bank?sslmode=disable"
+action/workflow set: (if using JQ, then we dont need to install it as it is available in ubuntu image)
+(we dont have to setup aws credentials, cause it was done in previous step)
+aws secretsmanager get-secret-value --secret-id olim_bank --query SecretString --output text > app.json
+
+
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
+jq to json
+aws secretsmanager get-secret-value --secret-id olim_bank --query SecretString --output text | jq -c 'to_entries | map({key: .key, value: .value}) | from_entries'
+
+jq to env
+aws secretsmanager get-secret-value --secret-id olim_bank --query SecretString --output text | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]'
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
