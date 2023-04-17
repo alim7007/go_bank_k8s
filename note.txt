@@ -71,6 +71,7 @@ iam -> users -> create group=deployment -> copy role-> set github.action.secrets
 --query SecretString
 --output text
 aws configure
+create env, as from aws downloaded container gives err: run db migration,URL cannot be empty(start.sh)
 
 action/workflow set: (if using JQ, then we dont need to install it as it is available in ubuntu image)
 (we dont have to setup aws credentials, cause it was done in previous step)
