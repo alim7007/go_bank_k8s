@@ -21,6 +21,9 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Load secrets from aws and save app.json
+        run: aws secretsmanager get-secret-value --secret-id olim_bank --query SecretString --output text > app.json
       - name: Build, tag, and push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
