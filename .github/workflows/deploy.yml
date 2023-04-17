@@ -15,7 +15,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::635849629849:user/github-ci
+          aws-access-key-id: AKIAZIC4XMCMYURZPQ56
+          aws-secret-access-key: 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
           aws-region: eu-west-3
       - name: Login to Amazon ECR
         id: login-ecr
