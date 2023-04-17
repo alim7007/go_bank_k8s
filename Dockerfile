@@ -11,7 +11,7 @@ FROM alpine:3.16
 WORKDIR /app
 COPY --from=builder /app/main .
 COPY --from=builder /app/migrate.linux-amd64 ./migrate
-COPY app.env .
+COPY .env .
 COPY app.json .
 COPY start.sh .
 COPY wait-for.sh .
