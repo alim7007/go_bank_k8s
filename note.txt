@@ -65,17 +65,44 @@ auth.middleware
 10. Dockerfile, docker-compose, docker
 AWS, ECR, EC2, S3, IAM
 ECR -> create repository -> github/workflow/deploy -> Registry=go_bank_k8s
-iam -> users -> create group=deployment -> copy role-> set github.action.secrets=ACCESSS_IAM_ROLE
+iam -> users -> create group=deployment -> give permissions -> set github.action.accesssecrets
 
 11. aws secretsmanager get-secret-value --secret-id olim_bank
 --query SecretString
 --output text
 aws configure
+
 create env, as from aws downloaded container gives err: run db migration,URL cannot be empty(start.sh)
 
 action/workflow set: (if using JQ, then we dont need to install it as it is available in ubuntu image)
 (we dont have to setup aws credentials, cause it was done in previous step)
+
 aws secretsmanager get-secret-value --secret-id olim_bank --query SecretString --output text > app.json
+aws secretsmanager get-secret-value --secret-id olim_bank --query SecretString --output text | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | .[]' > .env
+
+
+12.EKS cluster,
+kubectl cluster-info => connection to the server localhost:8080 was refused
+aws eks update-kubeconfig --name olim_bank --region eu-west-3, error
+permission EKSFULLACCESS
+aws eks update-kubeconfig --name olim_bank --region eu-west-3 , creates .kube/config
+kubectl config use-context  arn:aws:eks:eu-west-3:635849629849:cluster/olim_bank , switch to context
+kubectl cluster-info => this time UnAuthorized error
+////////////////////////////////
+////////////////////////////////
+[default]
+aws_access_key_id = AKIAZIC4XMCMVKL6KUUW
+aws_secret_access_key = 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
+
+[github]
+aws_access_key_id = AKIAZIC4XMCMRESBGZVK
+aws_secret_access_key = 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
+////////////////////////////////
+////////////////////////////////
+kubectl cluster-info => works 
+
+13. kubectl apply -f eks/deployment.yaml
+kubectl apply -f eks/service.yaml
 
 
 /////////////////////////////////////
@@ -89,3 +116,39 @@ aws secretsmanager get-secret-value --secret-id olim_bank --query SecretString -
 /////////////////////////////////////
 /////////////////////////////////////
 /////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+AWS EKS  .kube/config
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMvakNDQWVhZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJek1EUXhOekE0TVRNMU0xb1hEVE16TURReE5EQTRNVE0xTTFvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTmpJCktFakFWaExoQm9nS1VlYy9tK1ZWTHBLYmhNMUd5ZzIwaTkrd21yV1JIUW1sNDVFSXlyQlZSUE92blZNOHRQN2EKWVl4TGwzb2xlQkx5SklTaXdTRkJRb1YxNVFhM0k1T1FrNitYeUE3U0lqUGp5QmE0RmFRTVJyd2x5VHl2VFBzbwo2ck1YMjg5N042cGVLQ2MzV1lyRDBzTWhBRTlrcXdyZmw0SFBDYWdhamcya2phbTlYT3Z6eTZqVVpvQlJPTE1NCmJtRk1XcVR6MEdXQ3FxeldPdWU2WUgyU2QrVUdFMEZLWDVWLy9aSXVrT1lqNHhJQVE3WEpuNjVlcHRGL2tOV2sKZURxTXFSMHZGWFlNMFVObmtaRHluSURkaWdWMzFHV2dLQTVtSmVPYzBZQ3JGbStla3RQSFJiQlJXcWxCbEEwUgozUHhJc1hxdXRMSFhGT0FTbUZNQ0F3RUFBYU5aTUZjd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZCaFkzc0QrckNXWGRmYXNhV1lJR0hKRTROTmZNQlVHQTFVZEVRUU8KTUF5Q0NtdDFZbVZ5Ym1WMFpYTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBSG4raTJLRHhqMDhIdFpkblk5RQp1bVFGNWcvcHZMbG9CVHVib0JDcUE1bU9wNnF3aEdIN2hCU2l3U1pDcFZVb1JpTEREb3dMY0RHVG9XR0U0M2lsCjVxaHNMMWd3dTM4TERQWUpkejBXSndsVTF3MzhUSGNUNkhwWkJGblVRaC9Na3l2cVlnREdITWpVZW15cUh0Q0QKNjhZa1VrcDRXcGhwVDlObFFGU2pXNFhTbjBSZkNDUVZIc1N0a1lCYXo4WTVRRFNYOU9valNtUVBNVlhTVDBpbQpuVTEvRGpJV2sxNENsSk9US3o3NUVLWjBqVUt2Z2NBSi9EK3BoWGhYenJ1dnh4NFpWUlJuaEp6YXNBUTNXUlVCClhYcnBHTGJOcUYxMEpWUlpjOVdLamV6MFJ3dGJ6YWk3MlQ1bTIwY2JhcTY2UnRZK3ppQVRNTzU2VmZxSTV0dlgKK2g0PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    server: https://4FF77AE07F753878E81D2CE0156D4C99.gr7.eu-west-3.eks.amazonaws.com
+  name: arn:aws:eks:eu-west-3:635849629849:cluster/olim_bank
+contexts:
+- context:
+    cluster: arn:aws:eks:eu-west-3:635849629849:cluster/olim_bank
+    user: arn:aws:eks:eu-west-3:635849629849:cluster/olim_bank
+  name: arn:aws:eks:eu-west-3:635849629849:cluster/olim_bank
+current-context: arn:aws:eks:eu-west-3:635849629849:cluster/olim_bank
+kind: Config
+preferences: {}
+users:
+- name: arn:aws:eks:eu-west-3:635849629849:cluster/olim_bank
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - --region
+      - eu-west-3
+      - eks
+      - get-token
+      - --cluster-name
+      - olim_bank
+      - --output
+      - json
+      command: aws
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////

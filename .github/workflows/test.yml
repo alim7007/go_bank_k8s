@@ -17,7 +17,7 @@ jobs:
         env:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: olim123
-          POSTGRES_DB: olim_bank
+          POSTGRES_DB: olimbank
         ports:
           - 5432:5432
         options: >-

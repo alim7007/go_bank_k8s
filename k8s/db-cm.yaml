@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # Name your ConfigMap
+  labels:
+    app: postgresdb
+data:
+  POSTGRES_DB: olimbank
+  POSTGRES_USER: root
+  POSTGRES_PASSWORD: olim123

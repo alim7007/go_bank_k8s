@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: olim-bank-api
+  labels:
+    app: olim-bank-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: olim-bank-api
+  template:
+    metadata:
+      labels:
+        app: olim-bank-api
+    spec:
+      containers:
+        - name: bank-api
+          image: alimkhan7007/bank_k8s_image:0.0.1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_SOURCE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DATABASE_URL
+          resources: {}
+      restartPolicy: Always
