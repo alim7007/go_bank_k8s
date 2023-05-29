@@ -2,8 +2,8 @@
 
 set -e
 
-echo "run db migration!!!!"
-source /app/.env
+echo "run db migration!!!! $DB_SOURCE"
+# source /app/.env # for k8s
 /app/migrate -path /app/migration -database "$DB_SOURCE" -verbose up
 
 echo "start the app"

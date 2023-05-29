@@ -1,26 +1,34 @@
+DB_URL=postgresql://root:olim123@localhost:5432/olimbank?sslmode=disable
+
 postgres:
-	docker run --name pg-cont --network bank_network -p 5432:5432 -e POSTGRES_USER=root -e \
+	docker run --name postgresdb --network bank_network -p 5432:5432 -e POSTGRES_USER=root -e \
 	POSTGRES_PASSWORD=olim123 -v myvolume:/var/lib/postgresql/data -d postgres
 run_dockerfile:
 	docker run --name olimbank --network bank_network -p 8080:8080 -e \
-	DB_SOURCE="postgresql://root:olim123@pg-cont:5432/olimbank?sslmode=disable" olimbank:latest
+	DB_SOURCE="postgresql://root:olim123@postgresdb:5432/olimbank?sslmode=disable" olimbank:0.1
 createdb:
-	docker exec -it pg-cont createdb --username=root --owner=root olimbank
+	docker exec -it postgresdb createdb --username=root --owner=root olimbank
 dropdb:
-	docker exec -it pg-cont dropdb olimbank
+	docker exec -it postgresdb dropdb olimbank
 migrateup:
-	migrate -path db/migration -database "postgresql://root:olim123@localhost:5432/olimbank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "$(DB_URL)" -verbose up
 migrateup1:
-	migrate -path db/migration -database "postgresql://root:olim123@localhost:5432/olimbank?sslmode=disable" -verbose up 1
+	migrate -path db/migration -database "$(DB_URL)" -verbose up 1
 migratedown:
-	migrate -path db/migration -database "postgresql://root:olim123@localhost:5432/olimbank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "$(DB_URL)" -verbose down
 migratedown1:
-	migrate -path db/migration -database "postgresql://root:olim123@localhost:5432/olimbank?sslmode=disable" -verbose down 1
+	migrate -path db/migration -database "$(DB_URL)" -verbose down 1
 sqlc:
 	sqlc generate
 test:
 	go test -v -cover ./...
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/alim7007/go_bank_k8s/db/sqlc Store
+db_docs:
+	dbdocs build doc/db.dbml
 
-.PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc test mock run_dockerfile
+db_schema:
+	dbml2sql --postgres -o doc/schema.sql doc/db.dbml
+
+
+.PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc test mock run_dockerfile db_docs db_schema

@@ -6,18 +6,19 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=olim123
       - POSTGRES_DB=olimbank
-    container_name: pg_cont
+    container_name: postgresdb
   api:
     build:
       context: .
       dockerfile: Dockerfile
-    image: alimkhan7007/bank_k8s_image:1.1.1
+    image: olimbank:0.1
+    # image: alimkhan7007/bank_k8s_image:0.0.1 # for k8s
     container_name: bank_api
     ports:
       - "8080:8080"
     environment:
-      - DB_SOURCE=postgresql://root:olim123@pg_cont:5432/olimbank?sslmode=disable
+      - DB_SOURCE=postgresql://root:olim123@postgresdb:5432/olimbank?sslmode=disable
     depends_on:
       - psql
-    entrypoint: ["/app/wait-for.sh", "pg_cont:5432", "--", "/app/start.sh"]
+    entrypoint: ["/app/wait-for.sh", "postgresdb:5432", "--", "/app/start.sh"]
     command: ["/app/main"]
