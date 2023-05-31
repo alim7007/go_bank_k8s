@@ -11,7 +11,8 @@ import (
 type Config struct {
 	DBDriver             string        `mapstructure:"DB_DRIVER"`
 	DBSource             string        `mapstructure:"DB_SOURCE"`
-	ServerAddress        string        `mapstructure:"SERVER_ADDRESS"`
+	HTTPServerAddress    string        `mapstructure:"HTTP_SERVER_ADDRESS"`
+	GRPCServerAddress    string        `mapstructure:"GRPC_SERVER_ADDRESS"`
 	TokenSymmetricKey    string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	AccessTokenDuration  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
@@ -42,7 +43,8 @@ func LoadConfig(path string) (config Config, err error) {
 	config = Config{
 		DBDriver:             viper.GetString("DB_DRIVER"),
 		DBSource:             viper.GetString("DB_SOURCE"),
-		ServerAddress:        viper.GetString("SERVER_ADDRESS"),
+		HTTPServerAddress:    viper.GetString("HTTP_SERVER_ADDRESS"),
+		GRPCServerAddress:    viper.GetString("GRPC_SERVER_ADDRESS"),
 		TokenSymmetricKey:    viper.GetString("TOKEN_SYMMETRIC_KEY"),
 		AccessTokenDuration:  accessTokenDuration,
 		RefreshTokenDuration: refreshTokenDuration,
