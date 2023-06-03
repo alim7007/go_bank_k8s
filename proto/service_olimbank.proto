@@ -4,10 +4,34 @@ package pb;
 
 import "rpc_create_user.proto";
 import "rpc_login_user.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/alim7007/go_bank_k8s/pb";
 
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+      title: "OlimBank";
+      version: "0.0.1";
+      contact: {
+        name: "alim7007";
+        url: "https://github.com/alim7007/go_bank_k8s";
+        email: "olimtoni7007@gmail.com";
+      };
+    };
+};
+
 service OlimBank{
-    rpc CreateUser(CreateUserRequest)returns(CreateUserResponse);
-    rpc LoginUser(LoginUserRequest)returns(LoginUserResponse);
+    rpc CreateUser(CreateUserRequest)returns(CreateUserResponse){
+        option (google.api.http) = {
+            post: "/user/create"
+            body: "*"
+        };
+    };
+    rpc LoginUser(LoginUserRequest)returns(LoginUserResponse){
+        option (google.api.http) = {
+            post: "/users/login"
+            body: "*"
+        };
+    };
 }
