@@ -14,10 +14,14 @@
       "name": "OlimBank"
     }
   ],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "paths": {
-    "/user/create": {
+    "/users/create": {
       "post": {
         "operationId": "OlimBank_CreateUser",
         "responses": {
@@ -44,7 +48,9 @@
             }
           }
         ],
-        "tags": ["OlimBank"]
+        "tags": [
+          "OlimBank"
+        ]
       }
     },
     "/users/login": {
@@ -74,7 +80,9 @@
             }
           }
         ],
-        "tags": ["OlimBank"]
+        "tags": [
+          "OlimBank"
+        ]
       }
     }
   },

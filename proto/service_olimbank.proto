@@ -24,14 +24,23 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 service OlimBank{
     rpc CreateUser(CreateUserRequest)returns(CreateUserResponse){
         option (google.api.http) = {
-            post: "/user/create"
+            post: "/users/create"
             body: "*"
         };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+			description: "Use this API to create a new user";
+			summary: "Create new user";
+        };
+
     };
     rpc LoginUser(LoginUserRequest)returns(LoginUserResponse){
         option (google.api.http) = {
             post: "/users/login"
             body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+			description: "Use this API to login user and get access token & refresh token";
+			summary: "Login user";
         };
     };
 }

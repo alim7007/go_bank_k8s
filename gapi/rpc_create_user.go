@@ -6,6 +6,7 @@ import (
 	db "github.com/alim7007/go_bank_k8s/db/sqlc"
 	"github.com/alim7007/go_bank_k8s/pb"
 	"github.com/alim7007/go_bank_k8s/util"
+
 	"github.com/alim7007/go_bank_k8s/val"
 	"github.com/lib/pq"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"

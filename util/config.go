@@ -11,6 +11,7 @@ import (
 type Config struct {
 	DBDriver             string        `mapstructure:"DB_DRIVER"`
 	DBSource             string        `mapstructure:"DB_SOURCE"`
+	MigrationUrl         string        `mapstructure:"MIGRATION_URL"`
 	HTTPServerAddress    string        `mapstructure:"HTTP_SERVER_ADDRESS"`
 	GRPCServerAddress    string        `mapstructure:"GRPC_SERVER_ADDRESS"`
 	TokenSymmetricKey    string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
@@ -43,6 +44,7 @@ func LoadConfig(path string) (config Config, err error) {
 	config = Config{
 		DBDriver:             viper.GetString("DB_DRIVER"),
 		DBSource:             viper.GetString("DB_SOURCE"),
+		MigrationUrl:         viper.GetString("MIGRATION_URL"),
 		HTTPServerAddress:    viper.GetString("HTTP_SERVER_ADDRESS"),
 		GRPCServerAddress:    viper.GetString("GRPC_SERVER_ADDRESS"),
 		TokenSymmetricKey:    viper.GetString("TOKEN_SYMMETRIC_KEY"),

@@ -5,7 +5,7 @@ postgres:
 	POSTGRES_PASSWORD=olim123 -v myvolume:/var/lib/postgresql/data -d postgres
 run_dockerfile:
 	docker run --name olimbank --network bank_network -p 8080:8080 -e \
-	DB_SOURCE="postgresql://root:olim123@postgresdb:5432/olimbank?sslmode=disable" olimbank:0.1
+	DB_SOURCE="postgresql://root:olim123@postgresdb:5432/olimbank?sslmode=disable" olimbank:latest
 createdb:
 	docker exec -it postgresdb createdb --username=root --owner=root olimbank
 dropdb:
@@ -37,6 +37,7 @@ proto:
 	--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
 	--openapiv2_out=doc/swagger --openapiv2_opt=allow_merge=true,merge_file_name=olimbank \
 	proto/*.proto
+	statik -src=./doc/swagger -dest=./doc
 	
 evans:
 	evans --host localhost --port 9090 -r repl

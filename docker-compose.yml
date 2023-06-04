@@ -11,7 +11,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: olimbank:0.1
+    image: olimbank:latest
     # image: alimkhan7007/bank_k8s_image:0.0.1 # for k8s
     container_name: bank_api
     ports:
