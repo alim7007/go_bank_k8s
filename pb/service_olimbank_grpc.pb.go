@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	OlimBank_CreateUser_FullMethodName = "/pb.OlimBank/CreateUser"
 	OlimBank_LoginUser_FullMethodName  = "/pb.OlimBank/LoginUser"
+	OlimBank_UpdateUser_FullMethodName = "/pb.OlimBank/UpdateUser"
 )
 
 // OlimBankClient is the client API for OlimBank service.
@@ -29,6 +30,7 @@ const (
 type OlimBankClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 }
 
 type olimBankClient struct {
@@ -57,12 +59,22 @@ func (c *olimBankClient) LoginUser(ctx context.Context, in *LoginUserRequest, op
 	return out, nil
 }
 
+func (c *olimBankClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
+	out := new(UpdateUserResponse)
+	err := c.cc.Invoke(ctx, OlimBank_UpdateUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OlimBankServer is the server API for OlimBank service.
 // All implementations must embed UnimplementedOlimBankServer
 // for forward compatibility
 type OlimBankServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	mustEmbedUnimplementedOlimBankServer()
 }
 
@@ -75,6 +87,9 @@ func (UnimplementedOlimBankServer) CreateUser(context.Context, *CreateUserReques
 }
 func (UnimplementedOlimBankServer) LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
+}
+func (UnimplementedOlimBankServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedOlimBankServer) mustEmbedUnimplementedOlimBankServer() {}
 
@@ -125,6 +140,24 @@ func _OlimBank_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OlimBank_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OlimBankServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OlimBank_UpdateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OlimBankServer).UpdateUser(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OlimBank_ServiceDesc is the grpc.ServiceDesc for OlimBank service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var OlimBank_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LoginUser",
 			Handler:    _OlimBank_LoginUser_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _OlimBank_UpdateUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
