@@ -15,6 +15,7 @@ import (
 )
 
 func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+	// not forget to set authorization=bearer v2.adaf....  in grpc header
 	authPayload, err := server.authorizeUser(ctx)
 	if err != nil {
 		return nil, unauthenticatedError(err)
@@ -25,12 +26,13 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 		return nil, invalidArgumentError(violations)
 	}
 
-	if authPayload.Username != req.GetUsername() {
-		return nil, status.Errorf(codes.PermissionDenied, "cannot update other user's info")
-	}
+	//with this code we cannot update username
+	// if authPayload.Username != req.GetUsername() {
+	// 	return nil, status.Errorf(codes.PermissionDenied, "cannot update other user's info")
+	// }
 
 	arg := db.UpdateUserParams{
-		Username: req.GetUsername(),
+		Username: authPayload.Username,
 		FullName: sql.NullString{
 			String: req.GetFullName(),
 			Valid:  req.FullName != nil,

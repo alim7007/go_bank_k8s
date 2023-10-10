@@ -5,7 +5,7 @@ postgres:
 	POSTGRES_PASSWORD=olim123 -v myvolume:/var/lib/postgresql/data -d postgres
 run_dockerfile:
 	docker run --name olimbank --network bank_network -p 8080:8080 -e \
-	DB_SOURCE="postgresql://root:olim123@postgresdb:5432/olimbank?sslmode=disable" olimbank:latest
+	DB_SOURCE="postgresql://root:olim123@postgresdb:5432/olimbank?sslmode=disable" olimbank:1.1
 createdb:
 	docker exec -it postgresdb createdb --username=root --owner=root olimbank
 dropdb:

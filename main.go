@@ -8,11 +8,15 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/alim7007/go_bank_k8s/api"
 	db "github.com/alim7007/go_bank_k8s/db/sqlc"
+
 	_ "github.com/alim7007/go_bank_k8s/doc/statik"
+
 	"github.com/alim7007/go_bank_k8s/gapi"
 	"github.com/alim7007/go_bank_k8s/pb"
 	"github.com/alim7007/go_bank_k8s/util"
+
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -44,9 +48,9 @@ func main() {
 	runDBMigration(config.MigrationUrl, config.DBSource)
 
 	store := db.NewStore(conn)
-	// runGinServier(config, store)
+	go runGrpcServer(config, store)
 	go runGatewayServer(config, store)
-	runGrpcServer(config, store)
+	runGinServier(config, store)
 }
 
 func runDBMigration(migrationURL string, dbSource string) {
@@ -122,7 +126,7 @@ func runGatewayServer(config util.Config, store db.Store) {
 	swaggerHandler := http.StripPrefix("/swagger/", http.FileServer(statikFS))
 	mux.Handle("/swagger/", swaggerHandler)
 
-	listener, err := net.Listen("tcp", config.HTTPServerAddress)
+	listener, err := net.Listen("tcp", config.GATEAWAY_HTTPServerAddress)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot create listener:")
 
@@ -135,14 +139,14 @@ func runGatewayServer(config util.Config, store db.Store) {
 	}
 }
 
-// func runGinServier(config util.Config, store db.Store) {
-// 	server, err := api.NewServer(config, store)
-// 	if err != nil {
-// 		log.Fatal().Err(err).Msg("cannot create server:")
-// 	}
+func runGinServier(config util.Config, store db.Store) {
+	server, err := api.NewServer(config, store)
+	if err != nil {
+		log.Fatal().Err(err).Msg("cannot create server:")
+	}
 
-// 	err = server.Start(config.HTTPServerAddress)
-// 	if err != nil {
-// 		log.Fatal().Err(err).Msg("cannot start server:")
-// 	}
-// }
+	err = server.Start(config.HTTPServerAddress)
+	if err != nil {
+		log.Fatal().Err(err).Msg("cannot start server:")
+	}
+}
