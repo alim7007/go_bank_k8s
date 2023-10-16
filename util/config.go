@@ -16,6 +16,7 @@ type Config struct {
 	HTTPServerAddress          string        `mapstructure:"HTTP_SERVER_ADDRESS"`
 	GATEAWAY_HTTPServerAddress string        `mapstructure:"GATEAWAY_HTTP_SERVER_ADDRESS"`
 	GRPCServerAddress          string        `mapstructure:"GRPC_SERVER_ADDRESS"`
+	Redis_Address              string        `mapstructure:"REDIS_ADDRESS"`
 	TokenSymmetricKey          string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	AccessTokenDuration        time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration       time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
@@ -51,6 +52,7 @@ func LoadConfig(path string) (config Config, err error) {
 		DBDriver:                   viper.GetString("DB_DRIVER"),
 		DBSource:                   viper.GetString("DB_SOURCE"),
 		MigrationUrl:               viper.GetString("MIGRATION_URL"),
+		Redis_Address:              viper.GetString("REDIS_ADDRESS"),
 		HTTPServerAddress:          viper.GetString("HTTP_SERVER_ADDRESS"),
 		GATEAWAY_HTTPServerAddress: viper.GetString("GATEAWAY_HTTP_SERVER_ADDRESS"),
 		GRPCServerAddress:          viper.GetString("GRPC_SERVER_ADDRESS"),

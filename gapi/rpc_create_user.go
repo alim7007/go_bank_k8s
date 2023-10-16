@@ -2,10 +2,13 @@ package gapi
 
 import (
 	"context"
+	"time"
 
 	db "github.com/alim7007/go_bank_k8s/db/sqlc"
 	"github.com/alim7007/go_bank_k8s/pb"
 	"github.com/alim7007/go_bank_k8s/util"
+	"github.com/alim7007/go_bank_k8s/worker"
+	"github.com/hibiken/asynq"
 
 	"github.com/alim7007/go_bank_k8s/val"
 	"github.com/lib/pq"
@@ -43,6 +46,22 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		return nil, status.Errorf(codes.Internal, "failed to create user: %s", err)
 
 	}
+
+	taskPayload := &worker.PayloadSendVerifyEmail{
+		Username: user.Username,
+	}
+
+	opts := []asynq.Option{
+		asynq.MaxRetry(10),
+		asynq.ProcessIn(10 * time.Second),
+		asynq.Queue(worker.QueueCritical),
+	}
+	err = server.taskDistributor.DistributeTaskSendVerifyEmail(ctx, taskPayload, opts...)
+
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to distribute task to send verify email")
+	}
+
 	rsp := &pb.CreateUserResponse{
 		User: convertUser(user),
 	}
