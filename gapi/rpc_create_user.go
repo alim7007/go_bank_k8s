@@ -42,7 +42,7 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 
 			opts := []asynq.Option{
 				asynq.MaxRetry(10),
-				asynq.ProcessIn(10 * time.Second),
+				asynq.ProcessIn(5 * time.Second),
 				asynq.Queue(worker.QueueCritical),
 			}
 			return server.taskDistributor.DistributeTaskSendVerifyEmail(ctx, taskPayload, opts...)
@@ -54,7 +54,7 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		if pqErr, ok := err.(*pq.Error); ok {
 			switch pqErr.Code.Name() {
 			case "unique_violation":
-				return nil, status.Errorf(codes.AlreadyExists, "username already exist: %s", err)
+				return nil, status.Errorf(codes.AlreadyExists, "credential already exist: %s", err)
 			}
 		}
 		return nil, status.Errorf(codes.Internal, "failed to create user: %s", err)

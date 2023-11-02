@@ -20,18 +20,20 @@ type Config struct {
 	TokenSymmetricKey          string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	AccessTokenDuration        time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration       time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
+	EmailSenderName            string        `mapstructure:"EMAIL_SENDER_NAME"`
+	EmailSenderAddress         string        `mapstructure:"EMAIL_SENDER_ADDRESS"`
+	EmailSenderPassword        string        `mapstructure:"EMAIL_SENDER_PASSWORD"`
 }
 
 // LoadConfig reads configuration from environment file or variables
 func LoadConfig(path string) (config Config, err error) {
-	// for app.json(env)
-	// viper.SetConfigName("app")
-	// viper.SetConfigType("json")
-	// viper.AddConfigPath(path)
+	viper.SetConfigName("app")
+	viper.SetConfigType("env")
+	viper.AddConfigPath(path)
 	// viper.AutomaticEnv()
 
-	// for directly from .env
-	viper.SetConfigFile(".env")
+	// for directly from .env but not working with test
+	// viper.SetConfigFile(".env")
 
 	err = viper.ReadInConfig()
 	if err != nil {
@@ -59,6 +61,9 @@ func LoadConfig(path string) (config Config, err error) {
 		TokenSymmetricKey:          viper.GetString("TOKEN_SYMMETRIC_KEY"),
 		AccessTokenDuration:        accessTokenDuration,
 		RefreshTokenDuration:       refreshTokenDuration,
+		EmailSenderName:            viper.GetString("EMAIL_SENDER_NAME"),
+		EmailSenderAddress:         viper.GetString("EMAIL_SENDER_ADDRESS"),
+		EmailSenderPassword:        viper.GetString("EMAIL_SENDER_PASSWORD"),
 	}
 	return
 }

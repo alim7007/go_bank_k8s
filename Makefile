@@ -21,7 +21,7 @@ migratedown1:
 sqlc:
 	sqlc generate
 test:
-	go test -v -cover ./...
+	go test -v -cover -short ./...
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/alim7007/go_bank_k8s/db/sqlc Store
 db_docs:
