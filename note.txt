@@ -9,10 +9,6 @@ docker container inspect pg-cont
 docker network inspect bank_network
 docker network ls
 
-//Dockerfile
-docker run --name olimbank --network bank_network -p 8080:8080 -e DB_SOURCE="postgresql://root:olim123@pg-cont:5432/olim_bank?sslmode=disable" olimbank:latest
-
-
 //DATABASE
 \du  //show users
 \dt  //show tables

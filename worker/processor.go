@@ -4,6 +4,7 @@ import (
 	"context"
 
 	db "github.com/alim7007/go_bank_k8s/db/sqlc"
+	"github.com/alim7007/go_bank_k8s/mail"
 	"github.com/hibiken/asynq"
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog/log"
@@ -15,16 +16,17 @@ const (
 )
 
 type TaskProcessor interface {
-	ProcesssTaskSencVerifyEmail(ctx context.Context, task *asynq.Task) error
+	ProcesssTaskSendVerifyEmail(ctx context.Context, task *asynq.Task) error
 	Start() error
 }
 
 type RedisTaskProcessor struct {
 	server *asynq.Server
 	store  db.Store
+	mailer mail.EmailSender
 }
 
-func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskProcessor {
+func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store, mailer mail.EmailSender) TaskProcessor {
 	logger := NewLogger()
 	redis.SetLogger(logger)
 
@@ -44,11 +46,12 @@ func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskPr
 	return &RedisTaskProcessor{
 		server: server,
 		store:  store,
+		mailer: mailer,
 	}
 }
 
 func (processor *RedisTaskProcessor) Start() error {
 	mux := asynq.NewServeMux()
-	mux.HandleFunc(TaskSendVerifyEmail, processor.ProcesssTaskSencVerifyEmail)
+	mux.HandleFunc(TaskSendVerifyEmail, processor.ProcesssTaskSendVerifyEmail)
 	return processor.server.Start(mux)
 }

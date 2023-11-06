@@ -10,6 +10,7 @@ import (
 
 	// "github.com/alim7007/go_bank_k8s/api"
 	db "github.com/alim7007/go_bank_k8s/db/sqlc"
+	"github.com/alim7007/go_bank_k8s/mail"
 	"github.com/alim7007/go_bank_k8s/worker"
 	"github.com/hibiken/asynq"
 
@@ -58,7 +59,7 @@ func main() {
 	taskDistributor := worker.NewRedisTaskDistributor(redisOpt)
 
 	// run
-	go runTaskProcessor(redisOpt, store)
+	go runTaskProcessor(config, redisOpt, store)
 	go runGrpcServer(config, store, taskDistributor)
 	runGatewayServer(config, store, taskDistributor)
 	// runGinServier(config, store)
@@ -167,8 +168,9 @@ func runGatewayServer(config util.Config, store db.Store, taskDistributor worker
 //	}
 //
 // ////////////////////////////////////////////////////////////////////////////////////////////////////
-func runTaskProcessor(redisClientOpt asynq.RedisClientOpt, store db.Store) {
-	taskProcessor := worker.NewRedisTaskProcessor(redisClientOpt, store)
+func runTaskProcessor(config util.Config, redisClientOpt asynq.RedisClientOpt, store db.Store) {
+	mailer := mail.NewGmailSender(config.EmailSenderName, config.EmailSenderAddress, config.EmailSenderPassword)
+	taskProcessor := worker.NewRedisTaskProcessor(redisClientOpt, store, mailer)
 	log.Info().Msg("start task processor")
 	err := taskProcessor.Start()
 	if err != nil {

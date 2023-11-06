@@ -10,6 +10,8 @@ createdb:
 	docker exec -it postgresdb createdb --username=root --owner=root olimbank
 dropdb:
 	docker exec -it postgresdb dropdb olimbank
+new_migrate:
+	migrate create -ext sql -dir db/migration -seq $(name)
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
 migrateup1:
@@ -46,4 +48,4 @@ redis:
 check_redis:
 	docker exec -it redis redis-cli ping
 
-.PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc test mock run_dockerfile db_docs db_schema proto evans redis check_redis
+.PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc test mock run_dockerfile db_docs db_schema proto evans redis check_redis new_migrate
