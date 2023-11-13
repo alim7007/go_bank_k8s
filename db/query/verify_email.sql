@@ -15,5 +15,5 @@ WHERE
     id = @id
     AND secret_code = @secret_code
     AND is_used = FALSE
-    AND expired_at > now()
+    AND expires_at > now()
 RETURNING *;
