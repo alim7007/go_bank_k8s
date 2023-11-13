@@ -55,10 +55,17 @@ func TestTransferAPI(t *testing.T) {
 				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account1.ID)).Times(1).Return(account1, nil)
 				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account2.ID)).Times(1).Return(account2, nil)
 
+				// arg := db.TransferTxParams{
+				// 	FromAccountID: account1.ID,
+				// 	ToAccountID:   account2.ID,
+				// 	Amount:        amount,
+				// }
 				arg := db.TransferTxParams{
-					FromAccountID: account1.ID,
-					ToAccountID:   account2.ID,
-					Amount:        amount,
+					CreateTransferParams: db.CreateTransferParams{
+						FromAccountID: account1.ID,
+						ToAccountID:   account2.ID,
+						Amount:        amount,
+					},
 				}
 				store.EXPECT().TransferTx(gomock.Any(), gomock.Eq(arg)).Times(1)
 			},
