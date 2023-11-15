@@ -28,6 +28,10 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		return nil, status.Errorf(codes.Internal, "failed to hash password %s", err)
 	}
 
+	// we send arg := CreateUserTxParams struct { CreateUserParams, AfterCreate }
+	// to func CreateUserTx(ctx, arg) by params and AfterCreate will be
+	// executed there as callback function.
+
 	arg := db.CreateUserTxParams{
 		CreateUserParams: db.CreateUserParams{
 			Username:       req.GetUsername(),
