@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"os"
 
 	"net"
@@ -10,21 +9,21 @@ import (
 
 	// "github.com/alim7007/go_bank_k8s/api"
 	db "github.com/alim7007/go_bank_k8s/db/sqlc"
+	_ "github.com/alim7007/go_bank_k8s/doc/statik"
 	"github.com/alim7007/go_bank_k8s/mail"
 	"github.com/alim7007/go_bank_k8s/worker"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/hibiken/asynq"
-
-	_ "github.com/alim7007/go_bank_k8s/doc/statik"
 
 	"github.com/alim7007/go_bank_k8s/gapi"
 	"github.com/alim7007/go_bank_k8s/pb"
 	"github.com/alim7007/go_bank_k8s/util"
 
 	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rakyll/statik/fs"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -43,7 +42,7 @@ func main() {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
 
-	conn, err := sql.Open(config.DBDriver, config.DBSource)
+	conn, err := pgxpool.New(context.Background(), config.DBSource)
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot connect to db")
