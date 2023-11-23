@@ -29,7 +29,7 @@ func LoadConfig(path string) (config Config, err error) {
 	viper.SetConfigName("app")
 	viper.SetConfigType("env")
 	viper.AddConfigPath(path)
-	// viper.AutomaticEnv()
+	viper.AutomaticEnv()
 
 	// for directly from .env but not working with test
 	// viper.SetConfigFile(".env")

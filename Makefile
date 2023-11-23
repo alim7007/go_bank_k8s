@@ -1,15 +1,15 @@
 DB_URL=postgresql://root:olim123@localhost:5432/olimbank?sslmode=disable
 
 postgres:
-	docker run --name postgresdb --network bank_network -p 5432:5432 -e POSTGRES_USER=root -e \
-	POSTGRES_PASSWORD=olim123 -v myvolume:/var/lib/postgresql/data -d postgres
+	docker run --name postgresdb_c --network bank_network -p 5432:5432 -e POSTGRES_USER=root -e \
+	POSTGRES_PASSWORD=olim123 -v postgresdb_c:/var/lib/postgresql/data -d postgres 
 run_dockerfile:
 	docker run --name olimbank --network bank_network -p 8080:8080 -e \
-	DB_SOURCE="postgresql://root:olim123@postgresdb:5432/olimbank?sslmode=disable" olimbank:1.1
+	DB_SOURCE="postgresql://root:olim123@postgresdb_c:5432/olimbank?sslmode=disable" -e REDIS_ADDRESS="redis_c:6379" olimbank:1.1
 createdb:
-	docker exec -it postgresdb createdb --username=root --owner=root olimbank
+	docker exec -it postgresdb_c createdb --username=root --owner=root olimbank
 dropdb:
-	docker exec -it postgresdb dropdb olimbank
+	docker exec -it postgresdb_c dropdb olimbank
 new_migrate:
 	migrate create -ext sql -dir db/migration -seq $(name)
 migrateup:
@@ -44,8 +44,8 @@ proto:
 evans:
 	evans --host localhost --port 9090 -r repl
 redis: 
-	docker run --name redis -p 6379:6379 -d redis:7-alpine
+	docker run --name redis_c -p 6379:6379 --network bank_network -d redis:7-alpine
 check_redis:
-	docker exec -it redis redis-cli ping
+	docker exec -it redis_c redis-cli ping
 
 .PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc test mock run_dockerfile db_docs db_schema proto evans redis check_redis new_migrate

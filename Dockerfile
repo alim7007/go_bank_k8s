@@ -1,5 +1,5 @@
 # stage of building
-FROM golang:1.20-alpine3.16 AS builder
+FROM golang:1.21-alpine3.18 AS builder
 WORKDIR /app
 COPY . .
 RUN go build -o main main.go
@@ -9,18 +9,16 @@ RUN go build -o main main.go
 # RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz | tar xvz
 
 # stage of running
-FROM alpine:3.16
+FROM alpine:3.18
 WORKDIR /app
 COPY --from=builder /app/main .
 # *migrate
 # COPY --from=builder /app/migrate.linux-amd64 ./migrate
-COPY .env .
-COPY app.json .
+COPY app.env .
 COPY start.sh .
 COPY wait-for.sh .
 COPY db/migration ./db/migration
 
-EXPOSE 8080
+EXPOSE 8081
 CMD [ "/app/main" ]
 ENTRYPOINT [ "/app/start.sh" ]
-
